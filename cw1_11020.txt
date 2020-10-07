@@ -159,7 +159,7 @@ WHERE pensja_stanowisko.kwota > 1000;
 SELECT id_pracownika FROM wynagrodzenie
 INNER JOIN premia ON wynagrodzenie.id_premii = premia.id_premii
 INNER JOIN pensja_stanowisko ON wynagrodzenie.id_pensji = pensja_stanowisko.id_pensji
-WHERE pensja_stanowisko.kwota > 2000;
+WHERE pensja_stanowisko.kwota > 2000 AND premia.rodzaj LIKE 'brak';
 -- 6d
 SELECT * FROM pracownicy WHERE imie LIKE 'J%';
 -- 6e

@@ -80,7 +80,7 @@ VALUES
 ('Tomasz', 'Kareta', 'Katowice', '123456789'),
 ('Jan', 'Kowalski', 'Gdansk', '544466787'),
 ('Jan', 'Nowak', 'Warszawa', '864443059'),
-('Tomislaw', 'Konana', 'Krakow', '326428931'),
+('Tomislawa', 'Konana', 'Krakow', '326428931'),
 ('Adam', 'Brony', 'Rzeszow', '364666888'),
 ('Michal', 'Stulka', 'Krakow', '573482743'),
 ('Agnieszka', 'Brzoza', 'Katowice', '194893653'),
@@ -163,7 +163,7 @@ WHERE pensja_stanowisko.kwota > 2000 AND premia.rodzaj LIKE 'brak';
 -- 6d
 SELECT * FROM pracownicy WHERE imie LIKE 'J%';
 -- 6e
-SELECT * FROM pracownicy WHERE nazwisko LIKE '%n%a';
+SELECT * FROM pracownicy WHERE nazwisko LIKE '%n%' AND imie LIKE '%a';
 -- 6f 
 SELECT imie, nazwisko, godziny.liczba_godzin-160 AS "nadgodziny" FROM pracownicy
 INNER JOIN wynagrodzenie ON pracownicy.id_pracownika = wynagrodzenie.id_pracownika
@@ -248,8 +248,7 @@ INNER JOIN pensja_stanowisko ON wynagrodzenie.id_pensji = pensja_stanowisko.id_p
 -- 9
 SELECT CONCAT('Pracownik ',imie,' ',nazwisko,', w dniu ',wynagrodzenie.data,' otrzymal pensje calkowita na kwote ',
 (pensja_stanowisko.kwota + premia.kwota + (CASE WHEN godziny.liczba_godzin < 160 THEN 0 ELSE (godziny.liczba_godzin - 160)*(pensja_stanowisko.kwota / 160)END)),
-' gdzie wynagrodzenie zasadnicze wynosilo: ',pensja_stanowisko.kwota,
-' zl, premia: ',premia.kwota,' zl, nadgodziny: ',
+' gdzie wynagrodzenie zasadnicze wynosilo: ',pensja_stanowisko.kwota,' zl, premia: ',premia.kwota,' zl, nadgodziny: ',
 (CASE WHEN godziny.liczba_godzin < 160 THEN 0 ELSE (godziny.liczba_godzin - 160)*(pensja_stanowisko.kwota / 160)END),' zl') 
 FROM pracownicy 
 INNER JOIN wynagrodzenie ON wynagrodzenie.id_pracownika = pracownicy.id_pracownika 

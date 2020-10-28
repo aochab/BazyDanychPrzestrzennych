@@ -1,0 +1,42 @@
+-- zad4
+CREATE TABLE tableB AS SELECT popp.*
+FROM popp, majrivers WHERE popp.f_codedesc LIKE 'Building' GROUP BY popp.gid 
+HAVING MIN(ST_Distance(majrivers.geom, popp.geom)) < 100000;
+
+-- Liczba budynkow
+SELECT COUNT(gid) FROM tableB;
+
+-- zad5
+CREATE TABLE airportsNew(
+	gid SERIAL PRIMARY KEY,
+	name VARCHAR(100),
+	geom GEOMETRY,
+	elev NUMERIC);
+
+INSERT INTO airportsNew (name, geom, elev)
+SELECT name, geom, elev FROM airports;
+
+-- a
+-- najbardziej oddalone na zachod
+SELECT airportsNew.name, ST_X(geom) FROM airportsNew ORDER BY ST_X(geom) LIMIT 1;
+
+-- najbardziej oddalone na wschod
+SELECT airportsNew.name, ST_X(geom) AS y FROM airportsNew ORDER BY ST_X(geom) DESC LIMIT 1;
+
+-- b
+INSERT INTO airportsNew(name, geom, elev)
+VALUES
+('airportB',
+ST_MakePoint(
+	(SELECT((SELECT ST_X(geom) FROM airportsNew ORDER BY ST_X(geom) DESC LIMIT 1) +
+	(SELECT ST_X(geom) FROM airportsNew ORDER BY ST_X(geom) LIMIT 1)) /2),
+	(SELECT((SELECT ST_Y(geom) FROM airportsNew ORDER BY ST_Y(geom) DESC LIMIT 1) +
+	+ (SELECT ST_Y(geom) FROM airportsNew ORDER BY ST_Y(geom) LIMIT 1)) /2)
+),1);
+
+SELECT * FROM airportsNew WHERE name LIKE 'airportB';
+
+-- zad6
+SELECT ST_Area(ST_Buffer(ST_ShortestLine(airports.geom,lakes.geom),1000)) 
+FROM airports, lakes
+WHERE airports.name LIKE 'AMBLER' AND lakes.names LIKE 'Iliamna Lake';
